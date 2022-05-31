@@ -177,6 +177,7 @@ def update_gridbot_activelines(gridbot, maxactivebuylines, maxactiveselllines):
         f" buy: {maxactivebuylines} and sell: {maxactiveselllines}: %s" % error["msg"]
     )
     return error["msg"]
+
 def manage_gridbot(thebot):
     """Move grid to match pricing."""
     botname = thebot["name"]
@@ -204,12 +205,10 @@ def manage_gridbot(thebot):
     if gridinfo is None:
         logger.info(f"No grid setup information found for {pair}, skipping update")
         return
-
-    disable_gridbot(thebot)
-    time.sleep(5)
+    
     newupperprice = float(currentprice) * 1.01
     newlowerprice = float(currentprice) * 0.99
-    enable_gridbot(thebot)
+    
 
     # Test updating active lines for @IamtheOnewhoKnocks:
     #maxactivebuylines = 3
@@ -247,8 +246,10 @@ def manage_gridbot(thebot):
                 )
     if botdata:
             logger.debug("Raw Gridbot data: %s" % botdata)
+            disable_gridbot(thebot)
+            sleep(5)
             manage_gridbot(botdata)
-            enable_gridbot(botdata)
+            enable_gridbot(thebot)
     else:
         logger.error("Error occurred managing gridbots: %s" % boterror["msg"])
 
