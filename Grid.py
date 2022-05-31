@@ -72,7 +72,30 @@ def disable_gridbot(gridbot):
     )
     if data:
         logger.info(
-            f"Enabled the gridbot '{botname}' ",
+            f"Disabled the gridbot '{botname}' ",
+            True,
+        )
+        return None
+
+    logger.error(
+        f"Error Disabling gridbot '{botname}' %s" % error["msg"]
+    )
+    return error["msg"]
+
+def enable_gridbot(gridbot):
+
+    """enable gridbot with gridbot."""
+
+    botname = gridbot["name"]
+
+    error, data = api.request(
+        entity="grid_bots",
+        action="enable",
+        action_id=str(gridbot["id"]),
+    )
+    if data:
+        logger.info(
+            f"enabled the gridbot '{botname}' ",
             True,
         )
         return None
@@ -182,10 +205,11 @@ def manage_gridbot(thebot):
         logger.info(f"No grid setup information found for {pair}, skipping update")
         return
 
+    disable_gridbot(thebot)
+    time.sleep(5)
     newupperprice = float(currentprice) * 1.01
     newlowerprice = float(currentprice) * 0.99
-    #newtokensgrid = gridinfo["tokensgrid"]
-    #newnumgrid = gridinfo["numgrid"]
+    enable_gridbot(thebot)
 
     # Test updating active lines for @IamtheOnewhoKnocks:
     #maxactivebuylines = 3
